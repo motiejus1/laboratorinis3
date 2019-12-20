@@ -41,8 +41,12 @@ iteracijos = 0;
 e = zeros(1,length(x));
 y = zeros(1,length(x));
 
+%skaiciuoja vidutine kvadratine paklaida
+while eklaida > 0.0004
 %koeficientu perskaiciavimas
+    iteracijos = iteracijos + 1;
     %ciklas kiekvienam x
+    
     for i = 1 : length(x)
         %spinduli tipo funckija. Gausas
         f_1 = exp(-(x(i)-c(1))^2/(2*r_1^2));
@@ -55,9 +59,20 @@ y = zeros(1,length(x));
         w_1 = w_1 + et*e(i)*f_1;
         w_2 = w_2 + et*e(i)*f_2;
         w_0 = w_0 + et*e(i);
+    end
+    %vidutine kvadratome paklaida pagal tikra reiksme
+    eklaida = immse(y,d);
+    if (iteracijos == 1000)
+        w_0 = randn(1);
+        w_1 = randn(1);
+        w_2 = randn(1);
+        iteracijos = 0;
     end    
+    fprintf('e=%2.10f iteracija=%2f \n',eklaida, iteracijos);
+end
 
 plot(x,y)
-
-figure
+hold on
 plot(x,d)
+legend('aproksimuota kreive', 'originali kreive');
+
